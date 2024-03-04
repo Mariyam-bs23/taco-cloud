@@ -2,6 +2,7 @@ package com.example.tacocloud.web;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.example.tacocloud.Ingredients;
@@ -42,14 +43,17 @@ public class DesignTacoController {
                     filterByType(ingredients, type));
         }
     }
+
     @ModelAttribute(name = "tacoOrder")
     public TacoOrder order() {
         return new TacoOrder();
     }
+
     @ModelAttribute(name = "taco")
     public Taco taco() {
         return new Taco();
     }
+
     @GetMapping
     public String showDesignForm() {
         return "design";
@@ -61,4 +65,12 @@ public class DesignTacoController {
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());
     }
+
+    @PostMapping
+    public String processTaco(Taco taco, @ModelAttribute TacoOrder tacoOrder){
+        tacoOrder.addTaco(taco);
+        log.info("Processing taco : {}" , taco);
+        return  "redirect:/orders/current";
+    }
+
 }
